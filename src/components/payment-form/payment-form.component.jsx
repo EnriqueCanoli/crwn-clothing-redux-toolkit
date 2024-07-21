@@ -12,17 +12,26 @@ const PaymentForm = () => {
         e.preventDefault();
 
         //check if the two hooks are loaded when the payment handler fires
-        if(!stripe || !elements){
+        if (!stripe || !elements) {
             return;
         }
 
-        
+        //Netlify works with functions as if they are API endpoints
+        const response = await fetch('/.netlify/functions/create-payment-intent', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ amount: 10000 }),
+        }).then((res) => res.json());
+
+        console.log(response)
 
     }
 
     return (
         <PaymentFormContainer>
-            <FormContainer>
+            <FormContainer onSubmit={paymentHandler}>
                 <h2>Credir Card Payment: </h2>
                 <CardElement />
                 <Button buttonType={BUTTON_TYPE_CLASSES.inverted} > Pay Now</Button>
